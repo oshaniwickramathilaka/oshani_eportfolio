@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oshani Wickramathilaka | ePortfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --accent: #52B788;
+    --accent-light: #74C69D;
+    --accent-muted: #1B3A2D;
+    --purple: #A78BFA;
+    --purple-light: #C4B5FD;
+    --purple-muted: #2D2244;
+    --text: #E8E6F0;
+    --text-muted: #9CA3AF;
+    --bg: #0F0E17;
+    --bg2: #16131F;
+    --surface: #1C1929;
+    --surface2: #221E32;
+    --border: #2E2A40;
+    --nav-h: 60px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at 10% 15%, rgba(167,139,250,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(82,183,136,0.07) 0%, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    background: rgba(15,14,23,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .nav-links { display: flex; gap: 0.1rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--text-muted); font-size: 12.5px;
+    font-weight: 400; padding: 5px 9px; border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--purple-light); background: var(--purple-muted); }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+
+  /* SECTIONS */
+  section { min-height: 100vh; padding: calc(var(--nav-h) + 3rem) 2rem 3rem; max-width: 920px; margin: 0 auto; }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.4rem; }
+  .divider { width: 36px; height: 2px; background: linear-gradient(90deg, var(--accent-light), var(--purple-light)); border-radius: 2px; margin: 0.6rem 0 1.25rem; }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; color: var(--text); }
+  h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1.25rem; color: var(--text); }
+  h3 { font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
+  p { color: var(--text-muted); margin-bottom: 0.85rem; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── IMAGE GALLERY SYSTEM ── */
+  .gallery {
+    display: grid;
+    gap: 6px;
+    margin-top: 1rem;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  /* Each cell is a fixed-height container */
+  .g-cell {
+    overflow: hidden;
+    position: relative;
+    background: var(--bg2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Image fills cell fully, object-fit:contain so nothing is cropped */
+  .g-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    cursor: zoom-in;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: brightness(0.93);
+    padding: 6px;
+  }
+  .g-cell img:hover { transform: scale(1.04); filter: brightness(1.05); }
+
+  /* 2-col equal */
+  .gallery-2 { grid-template-columns: 1fr 1fr; }
+  .gallery-2 .g-cell { height: 210px; }
+
+  /* 3-col equal */
+  .gallery-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .gallery-3 .g-cell { height: 170px; }
+
+  /* 4-col equal */
+  .gallery-4 { grid-template-columns: repeat(4, 1fr); }
+  .gallery-4 .g-cell { height: 140px; }
+
+  /* Featured: banner spans full width, thumbnails below (2-col) */
+  .gallery-featured { grid-template-columns: 1fr 1fr; }
+  .gallery-featured .g-cell { height: 170px; }
+  .gallery-featured .g-cell.banner { grid-column: 1 / -1; height: 260px; }
+
+  /* Featured-3: banner spans full width, 3 thumbnails below */
+  .gallery-featured-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .gallery-featured-3 .g-cell { height: 155px; }
+  .gallery-featured-3 .g-cell.banner { grid-column: 1 / -1; height: 260px; }
+
+  /* Single */
+  .gallery-single { grid-template-columns: 1fr; }
+  .gallery-single .g-cell { height: 300px; }
+
+  /* LIGHTBOX */
+  .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.93); z-index: 999; align-items: center; justify-content: center; padding: 2rem; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 90vh; object-fit: contain; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+  .lightbox-close { position: fixed; top: 1.25rem; right: 1.5rem; font-size: 2rem; color: #fff; cursor: pointer; line-height: 1; user-select: none; }
+  .lightbox-close:hover { color: var(--purple-light); }
+
+  /* Profile image */
+  .profile-img {
+    width: 150px; height: 150px; border-radius: 22px;
+    object-fit: cover; flex-shrink: 0;
+    border: 3px solid var(--purple-muted);
+    box-shadow: 0 4px 24px rgba(167,139,250,0.2);
+    cursor: zoom-in;
+  }
+
+  /* Cert image */
+  .cert-img {
+    width: 100%;
+    object-fit: contain;
+    margin-top: 0.65rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 8px;
+    display: block;
+    cursor: zoom-in;
+    max-height: 160px;
+  }
+
+  /* HOME */
+  #home { display: flex; flex-direction: column; justify-content: center; min-height: 100vh; padding-top: var(--nav-h); }
+  .home-inner { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 2.5rem; }
+  .home-subtitle { font-size: 0.97rem; color: var(--purple-light); font-weight: 500; margin-bottom: 0.6rem; }
+  .home-cta { display: flex; gap: 0.65rem; margin-top: 1.25rem; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 9px 20px; border-radius: 8px; font-size: 13.5px; font-weight: 500; text-decoration: none; cursor: pointer; border: 1.5px solid transparent; transition: 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%); color: #fff; border-color: transparent; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-outline { background: transparent; color: var(--purple-light); border-color: var(--purple); }
+  .btn-outline:hover { background: var(--purple-muted); }
+  .tag-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 0.85rem; }
+  .tag { background: var(--purple-muted); color: var(--purple-light); font-size: 11.5px; font-weight: 500; padding: 3px 11px; border-radius: 100px; border: 1px solid var(--border); }
+
+  /* ABOUT */
+  .about-intro { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--purple); border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; }
+  .info-card .label { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); font-weight: 500; margin-bottom: 0.25rem; }
+  .info-card .value { font-size: 0.88rem; color: var(--text); }
+
+  /* SKILLS */
+  .skills-section-title { font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); margin: 1.4rem 0 0.65rem; }
+  .skills-section-title:first-of-type { margin-top: 0; }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.6rem; }
+  .skill-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 0.75rem 0.9rem; display: flex; align-items: center; gap: 0.55rem; transition: border-color 0.2s; }
+  .skill-pill:hover { border-color: var(--purple-light); }
+  .skill-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--purple-light); flex-shrink: 0; }
+  .skill-pill-name { font-size: 12.5px; color: var(--text); }
+  .cert-grid { display: grid; gap: 0.65rem; }
+  .cert-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.1rem; }
+  .cert-header { display: flex; align-items: center; gap: 0.7rem; }
+  .cert-icon { width: 32px; height: 32px; border-radius: 7px; background: var(--purple-muted); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+  .cert-name { font-size: 13.5px; font-weight: 500; color: var(--text); line-height: 1.3; }
+  .cert-meta { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+  /* PROJECTS */
+  .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 1.4rem; margin-bottom: 1rem; transition: box-shadow 0.2s, border-color 0.2s; }
+  .project-card:hover { border-color: var(--purple); box-shadow: 0 4px 24px rgba(167,139,250,0.1); }
+  .project-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+  .project-num { font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.3rem; }
+  .project-module { font-size: 11px; color: var(--text-muted); background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 2px 9px; white-space: nowrap; height: fit-content; }
+  .project-section-label { font-size: 10.5px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-light); margin: 0.75rem 0 0.25rem; }
+  .project-tech { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 0.65rem; }
+  .tech-badge { background: var(--accent-muted); color: var(--accent-light); font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 5px; border: 1px solid rgba(82,183,136,0.2); }
+  .project-outcomes { list-style: none; padding: 0; }
+  .project-outcomes li { font-size: 13px; color: var(--text-muted); padding: 2px 0 2px 1rem; position: relative; }
+  .project-outcomes li::before { content: '·'; position: absolute; left: 0; color: var(--purple-light); font-weight: 700; }
+  .github-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--purple-light); text-decoration: none; margin-top: 0.65rem; font-weight: 500; border: 1px solid var(--border); padding: 4px 11px; border-radius: 6px; transition: background 0.2s, border-color 0.2s; }
+  .github-link:hover { background: var(--purple-muted); border-color: var(--purple); }
+
+  /* EXPERIENCE */
+  .exp-group-label { font-size: 10.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple-light); margin: 1.75rem 0 0.85rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+  .exp-group-label:first-of-type { margin-top: 0; }
+  .timeline { position: relative; padding-left: 1.4rem; }
+  .timeline::before { content: ''; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 1px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 1.75rem; }
+  .timeline-dot { position: absolute; left: -1.4rem; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--purple); border: 2px solid var(--bg); box-shadow: 0 0 8px rgba(167,139,250,0.5); }
+  .timeline-date { font-size: 11.5px; color: var(--purple-light); font-weight: 500; letter-spacing: 0.04em; margin-bottom: 0.15rem; }
+  .timeline-role { font-size: 0.97rem; font-weight: 500; color: var(--text); }
+  .timeline-org { font-size: 12.5px; color: var(--text-muted); margin-bottom: 0.35rem; }
+  .timeline-sub { font-size: 11.5px; font-weight: 500; color: var(--accent-light); margin: 0.45rem 0 0.15rem; }
+  .skills-developed { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 0.45rem; }
+  .skill-chip { background: var(--purple-muted); color: var(--purple-light); font-size: 10.5px; padding: 2px 8px; border-radius: 5px; border: 1px solid var(--border); }
+
+  /* REFLECTIONS */
+  .reflection-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--purple); border-radius: 0 12px 12px 0; padding: 1.25rem 1.4rem; margin-bottom: 0.85rem; }
+  .reflection-meta { font-size: 10.5px; color: var(--purple-light); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; margin-bottom: 0.35rem; }
+  .reflection-sub { font-size: 10.5px; font-weight: 500; color: var(--accent-light); text-transform: uppercase; letter-spacing: 0.07em; margin: 0.65rem 0 0.2rem; }
+
+  /* GOALS */
+  .goals-list { display: grid; gap: 0.65rem; }
+  .goal-item { display: flex; gap: 0.9rem; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 1.1rem; }
+  .goal-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 600; background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; flex-shrink: 0; width: 26px; }
+  .goal-term { font-size: 10.5px; color: var(--purple-light); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; margin-bottom: 0.2rem; }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem; }
+  .contact-item { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 1.1rem; display: flex; gap: 0.7rem; align-items: center; transition: border-color 0.2s; }
+  .contact-item:hover { border-color: var(--purple); }
+  .contact-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--purple-muted); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+  .contact-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-weight: 500; }
+  .contact-value { font-size: 13px; color: var(--text); font-weight: 500; word-break: break-all; }
+
+  @media (max-width: 640px) {
+    .home-inner { grid-template-columns: 1fr; }
+    .profile-img { display: none; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .gallery-3, .gallery-4 { grid-template-columns: 1fr 1fr; }
+    .gallery-3 .g-cell, .gallery-4 .g-cell { height: 130px; }
+    .gallery-featured, .gallery-featured-3 { grid-template-columns: 1fr 1fr; }
+    .gallery-featured .g-cell.banner,
+    .gallery-featured-3 .g-cell.banner { grid-column: 1 / -1; height: 180px; }
+    .nav-links { display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; background: rgba(15,14,23,0.97); border-bottom: 1px solid var(--border); flex-direction: column; padding: 1rem; gap: 0; }
+    .nav-links.open { display: flex; }
+    .hamburger { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <span class="lightbox-close" id="lightboxClose">&times;</span>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<nav>
+  <div class="nav-logo">O.W.</div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home" class="active">Home</a></li>
+    <li><a href="#about">About Me</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#reflections">Reflections</a></li>
+    <li><a href="#goals">Goals</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HOME -->
+<section id="home">
+  <div class="home-inner">
+    <div class="home-text">
+      <div class="section-label">Welcome to my Portfolio</div>
+      <h1>Oshani Wickramathilaka</h1>
+      <div class="home-subtitle">Computer Science Undergraduate | Data Science Enthusiast | Analytical Thinker</div>
+      <div class="divider"></div>
+      <p>I genuinely enjoy understanding how things work whether It’s breaking down a piece of code, exploring a database structure, or uncovering patterns in data that reveal a meaningful story.Technology goes beyond academics.It is something I naturally stay curious about and continue exploring even outside the classroom.</p>
+
+      <p>Along the way, I’ve built practical skills through hands on projects, involve in club activities, and exposure to real industry environments. I’m still learning and growing every day.This portfolio reflects that ongoing journey capturing both what I’ve achieved so far and what I’m continuing to work towards.</p>
+
+      <div class="tag-row">
+        <span class="tag">Programming</span>
+        <span class="tag">Databases</span>
+        <span class="tag">Data Analysis</span>
+        <span class="tag">Software Development</span>
+        <span class="tag">Data Science</span>
+      </div>
+      <div class="home-cta">
+        <a href="#projects" class="btn btn-primary">View Work</a>
+        <a href="#contact" class="btn btn-outline">Contact Me</a>
+      </div>
+    </div>
+    <img class="profile-img" src="images/profile_picture.jpeg" alt="Oshani Wickramathilaka">
+  </div>
+</section>
+
+<!-- ABOUT ME -->
+<section id="about">
+  <div class="section-label">Who I am</div>
+  <h2>About Me</h2>
+  <div class="divider"></div>
+  <div class="about-intro">
+    <p style="margin-bottom:0.7rem;">I'm a Computer Science student at the Faculty of Computing and Technology, University of Kelaniya. Over the past couple of years, I've been building a solid grasp of programming, databases, and data analysis. Those are not just for exams because I find it genuinely interesting to understand how systems come together.</p>
+    <p style="margin-bottom:0.7rem;">I'm drawn to data science and software development in particular. I like the idea that data can tell a story if you know how to look at it. Also a good software can make someone's day a little easier. I try to keep exploring new tools and frameworks on my own. So there is always something new worth learning.</p>
+  </div>
+  <div class="about-grid">
+    <div class="info-card"><div class="label">University</div><div class="value">University of Kelaniya</div></div>
+    <div class="info-card"><div class="label">Faculty</div><div class="value">Faculty of Computing and Technology</div></div>
+    <div class="info-card"><div class="label">Degree</div><div class="value">BSc(hons) in Computer Science</div></div>
+    <div class="info-card"><div class="label">Interests</div><div class="value">Software Development · Data Science</div></div>
+    <div class="info-card"><div class="label">Values</div><div class="value">Creativity · Adaptability · Continuous Learning</div></div>
+    <div class="info-card"><div class="label">Focus Areas</div><div class="value">Programming · Databases · Data Analysis</div></div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">What I can do</div>
+  <h2>Skills</h2>
+  <div class="divider"></div>
+
+  <div class="skills-section-title">Programming Languages</div>
+  <div class="skills-grid">
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Python</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">SQL</span></div>
+  </div>
+
+  <div class="skills-section-title">Data Science and Analytics</div>
+  <div class="skills-grid">
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Data Cleaning and Preprocessing</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Exploratory Data Analysis</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Data Visualization</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Basic Machine Learning</span></div>
+  </div>
+
+  <div class="skills-section-title">Tools and Technologies</div>
+  <div class="skills-grid">
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Jupyter Notebook</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">MySQL Workbench</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Power BI</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Microsoft Excel</span></div>
+  </div>
+
+  <div class="skills-section-title">Database Management</div>
+  <div class="skills-grid">
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">MySQL</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">PostgreSQL</span></div>
+  </div>
+
+  <div class="skills-section-title">Soft Skills</div>
+  <div class="skills-grid">
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Problem Solving</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Analytical Thinking</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Teamwork</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Time Management</span></div>
+    <div class="skill-pill"><div class="skill-dot"></div><span class="skill-pill-name">Continuous Learning</span></div>
+  </div>
+
+  <div class="skills-section-title" style="margin-top:1.5rem;">Certifications</div>
+  <div class="cert-grid">
+    <div class="cert-card">
+      <div class="cert-header">
+        
+        <div><div class="cert-name">Introduction to Python Programming</div><div class="cert-meta">Great Learning · January 2024</div></div>
+      </div>
+      <img class="cert-img" src="images/python.jpeg" alt="Python Certificate">
+    </div>
+    <div class="cert-card">
+      <div class="cert-header">
+        
+        <div><div class="cert-name">Data Analysis and Visualization</div><div class="cert-meta">Microsoft · October 2025</div></div>
+      </div>
+      <img class="cert-img" src="images/data_analysis.jpeg" alt="Data Analysis Certificate">
+    </div>
+    <div class="cert-card">
+      <div class="cert-header">
+        
+        <div><div class="cert-name">Introduction to Cloud Computing</div><div class="cert-meta">Coursera · December 2024</div></div>
+      </div>
+      <img class="cert-img" src="images/cloud_computing.jpeg" alt="Cloud Computing Certificate">
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">What I've built</div>
+  <h2>Projects</h2>
+  <div class="divider"></div>
+
+  <!-- Project 01 -->
+  <div class="project-card">
+    <div class="project-num">01</div>
+    <div class="project-header">
+      <h3>Vehicle Booking System</h3>
+      <span class="project-module">Web Programming · Year 1 Sem II</span>
+    </div>
+    <div class="project-section-label">What it was about</div>
+    <p style="font-size:13px;">The aim of this project was to create a web-based vehicle booking platform that feels like a real-world application rather than just an academic task. We focused on making it user-friendly and responsive so it works smoothly across different devices.</p>
+    <div class="project-section-label">What we built</div>
+    <p style="font-size:13px;">We developed a fully responsive, multi-page website designed to provide a smooth and engaging user experience across both desktop and mobile devices. The site includes key sections such as an informative “About Us” page, a dynamic Careers section, a user-friendly registration system, a functional contact form, a detailed services overview, and an interactive vehicle browsing interface.
+
+Throughout the development process, we focused on creating a clean and intuitive layout that makes navigation simple and accessible for users. Using HTML, CSS, and JavaScript, we ensured that each page is visually appealing while maintaining consistent design elements across the entire site. The vehicle browsing feature was designed to allow users to easily explore available options, enhancing overall usability and engagement.</p>
+    <div class="project-section-label">My part</div>
+    <p style="font-size:13px;">I was responsible for designing and developing the About Us and Careers pages by structuring content with HTML, styling with CSS, and adding JavaScript to improve interactivity and overall user experience.</p>
+    <div class="project-section-label">What I took away</div>
+    <ul class="project-outcomes">
+      <li>Got much more comfortable with frontend development</li>
+      <li>Learned how to think about user experience, not just code that works</li>
+      <li>Understood how a real multi page web application is structured</li>
+    </ul>
+    <div class="project-tech">
+      <span class="tech-badge">HTML</span>
+      <span class="tech-badge">CSS</span>
+      <span class="tech-badge">JavaScript</span>
+    </div>
+    <div class="gallery gallery-featured">
+      <div class="g-cell banner"><img src="images/spring_1.png" alt="Vehicle Booking — Home page"></div>
+      <div class="g-cell"><img src="images/spring_2.png" alt="Vehicle Booking — Browse vehicles"></div>
+      <div class="g-cell"><img src="images/spring_4.png" alt="Vehicle Booking — Detail view"></div>
+    </div>
+    <a href="https://github.com/oshaniwickramathilaka/vehiclebooking.git" target="_blank" class="github-link">&#11043; GitHub Repository</a>
+  </div>
+
+  <!-- Project 02 -->
+  <div class="project-card">
+    <div class="project-num">02</div>
+    <div class="project-header">
+      <h3>Spring Boot Social Media Web Application</h3>
+      <span class="project-module">Object Oriented Programming · Year 2 Sem II</span>
+    </div>
+    <div class="project-section-label">What it was about</div>
+    <p style="font-size:13px;">The idea behind this project was to build a simple social media platform where users can register, log in, and share posts that appear in a live feed for others to see.</p>
+    <div class="project-section-label">What we built</div>
+    <p style="font-size:13px;">We created a Spring Boot web application using MVC architecture. Thymeleaf was used for dynamic frontend rendering while MySQL handled data storage. The interface was designed to be clean and easy to use focusing on core functionality.</p>
+    <div class="project-section-label">My part</div>
+    <p style="font-size:13px;">I worked mainly on the User component by developing registration and login features, handling user data, connecting the system to the database, and contributing to the design of the user related pages.</p>
+    <div class="project-section-label">What I took away</div>
+    <ul class="project-outcomes">
+      <li>My first real experience with Spring Boot</li>
+      <li>Understood MVC properly by actually building with it, not just reading about it</li>
+      <li>Got hands-on experience with user authentication and CRUD operations</li>
+    </ul>
+    <div class="project-tech">
+      <span class="tech-badge">Spring Boot</span>
+      <span class="tech-badge">HTML</span>
+      <span class="tech-badge">CSS</span>
+      <span class="tech-badge">JavaScript</span>
+      <span class="tech-badge">MySQL</span>
+      <span class="tech-badge">Thymeleaf</span>
+    </div>
+    <a href="https://github.com/Chamoda789UOK/CSCI22082-SocialMediaApp-Group-K.git" target="_blank" class="github-link">&#11043; GitHub Repository</a>
+  </div>
+
+  <!-- Project 03 -->
+  <div class="project-card">
+    <div class="project-num">03</div>
+    <div class="project-header">
+      <h3>Interactive GUI for Machine Learning Models</h3>
+      <span class="project-module">Group Project</span>
+    </div>
+    <div class="project-section-label">What it was about</div>
+    <p style="font-size:13px;">Many beginners are interested in machine learning but feel discouraged by the amount of coding involved. This project aimed to address that by creating a desktop application that allows users to explore machine learning concepts visually without needing to write code.</p>
+    <div class="project-section-label">What we built</div>
+    <p style="font-size:13px;">This project focuses on developing an interactive machine learning application tailored for beginners and academic users. Unlike many existing no code tools that emphasize deployment, this platform is designed as a learn oriented system that guides users through the complete machine learning pipeline.
+The application is structured into multiple modules, starting with data preparation, where users can import datasets, handle missing values, and preprocess data through normalization and encoding techniques. The exploratory data analysis module enables users to visualize patterns and trends using intuitive graphs.
+Users can then build machine learning models using a drag and drop interface, selecting from supervised (ANN, SVM), unsupervised (K-Means), and deep learning models (CNN). The platform allows customization of hyperparameters and neural network layers, particularly for CNN architectures.
+A key feature of the system is real time visualizations during model training, where users can monitor metrics such as accuracy, loss, precision, and recall through live graphs. The evaluation module further supports performance analysis using confusion matrices, ROC curves, and F1-scores by enabling comparison between multiple models. Additionally, the application includes built in tutorials, contextual tooltips, and interactive visualizations to enhance learning. Users can test trained models with custom inputs.
+Overall, the platform serves both as a practical machine learning tool and an educational environment that helps users gradually build confidence and understanding in machine learning concepts.
+</p>
+    <div class="project-section-label">My part</div>
+    <ul class="project-outcomes" style="margin-bottom:0.4rem;">
+      <li>Researched regression algorithms and how to present them clearly in the app</li>
+      <li>Worked on improving the overall look and feel of the interface</li>
+      <li>Put together the project documentation and reports</li>
+    </ul>
+    <div class="project-section-label">What I took away</div>
+    <ul class="project-outcomes">
+      <li>Gained a much deeper appreciation for how ML models actually work under the hood</li>
+      <li>Learned how design choices can make or break a technical tool for non technical users</li>
+      <li>Built something genuinely useful for learners</li>
+    </ul>
+    <div class="project-tech">
+      <span class="tech-badge">Python</span>
+      <span class="tech-badge">PyQt</span>
+      <span class="tech-badge">PyTorch</span>
+      <span class="tech-badge">Scikit-learn</span>
+      <span class="tech-badge">NumPy</span>
+      <span class="tech-badge">Pandas</span>
+      <span class="tech-badge">Matplotlib</span>
+    </div>
+    <div class="gallery gallery-3">
+      <div class="g-cell"><img src="images/neuro_1.png" alt="NeuroLabs — Dashboard"></div>
+      <div class="g-cell"><img src="images/neuro_2.png" alt="NeuroLabs — Model selector"></div>
+      <div class="g-cell"><img src="images/neuro_3.png" alt="NeuroLabs — Evaluation"></div>
+    </div>
+    <a href="https://github.com/Team-Voxel/neurolabs.git" target="_blank" class="github-link">&#11043; GitHub Repository</a>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">My journey</div>
+  <h2>Experience</h2>
+  <div class="divider"></div>
+
+  <div class="exp-group-label">Club Activities and Leadership</div>
+  <div class="timeline">
+
+    <!-- IEEE -->
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">December 2024 - November 2025</div>
+      <div class="timeline-role">Sub Committee Member — Membership Development and Training</div>
+      <div class="timeline-org">IEEE Computer Society, University of Kelaniya</div>
+      <p>Helped onboard new members, grow community engagement, and support training sessions designed to build students' technical skills.</p>
+      <div class="timeline-sub">Code Quest '24 — Public Visibility Team</div>
+      <p style="font-size:13px;">I helped promote a two day Python workshop for school students by reaching out to schools directly, running social media campaigns, and making sure the event got the visibility it deserved.</p>
+      <div class="skills-developed">
+        <span class="skill-chip">Communication</span>
+        <span class="skill-chip">Marketing</span>
+        <span class="skill-chip">Teamwork</span>
+        <span class="skill-chip">Leadership</span>
+        <span class="skill-chip">Event Management</span>
+      </div>
+      <div class="gallery gallery-featured-3">
+        <div class="g-cell banner"><img src="images/Quest_1 (2).jpeg" alt="Code Quest — Main event"></div>
+        <div class="g-cell"><img src="images/Quest_2.jpeg" alt="Code Quest — Workshop session"></div>
+        <div class="g-cell"><img src="images/Quest_3.jpeg" alt="Code Quest — Team activity"></div>
+        <div class="g-cell"><img src="images/Quest_4.jpeg" alt="Code Quest — Closing ceremony"></div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">January 2024 - November 2024</div>
+      <div class="timeline-role">Member</div>
+      <div class="timeline-org">FOSS Community, University of Kelaniya</div>
+      <div class="timeline-sub">Open Dev Summit '25 — Accessibility Team, Organizing Committee</div>
+      <p style="font-size:13px;">Worked to make sure the summit was accessible and welcoming for everyone. I reached out to participants, promoted pre-summit workshops, and moderated two online sessions.</p>
+      <div class="skills-developed">
+        <span class="skill-chip">Coordination</span>
+        <span class="skill-chip">Inclusivity</span>
+        <span class="skill-chip">Public Speaking</span>
+        <span class="skill-chip">Problem Solving</span>
+      </div>
+      <div class="gallery gallery-featured-3">
+        <div class="g-cell banner"><img src="images/SUMMIT_1.jpeg" alt="Open Dev Summit — Main stage"></div>
+        <div class="g-cell"><img src="images/SUMMIT_2.jpeg" alt="Open Dev Summit — Workshop"></div>
+        <div class="g-cell"><img src="images/SUMMIT_3.jpeg" alt="Open Dev Summit — Panel"></div>
+        <div class="g-cell"><img src="images/SUMMIT_4.jpeg" alt="Open Dev Summit — Networking"></div>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- ISACA -->
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">December 2025 - Present</div>
+      <div class="timeline-role">Executive Board Member — Editor</div>
+      <div class="timeline-org">ISACA Student Group, University of Kelaniya</div>
+      <p>Handling content for the club's official communications by writing and editing proposals, letters, and social media captions, ensuring all work is professional and on-brand.</p>
+      <div class="skills-developed">
+        <span class="skill-chip">Written Communication</span>
+        <span class="skill-chip">Editing</span>
+        <span class="skill-chip">Creativity</span>
+        <span class="skill-chip">Attention to Detail</span>
+      </div>
+      <div class="gallery gallery-2">
+        <div class="g-cell"><img src="images/ISACA.jpeg" alt="ISACA — Club activity"></div>
+        <div class="g-cell"><img src="images/ISACA_2.jpeg" alt="ISACA — Event"></div>
+      </div>
+    </div>
+
+    
+    
+  <div class="exp-group-label">Industry Experience</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">17th March 2026</div>
+      <div class="timeline-role">Industry Field Visit</div>
+      <div class="timeline-org">London Stock Exchange Group (LSEG)  via Faculty of Computing and Technology, University of Kelaniya</div>
+      <p>Key Observations during the visit, I observed that real world organizations rely heavily on structured development methodologies such as Agile and iterative approaches to manage projects efficiently. It became clear that teamwork and effective communication play a crucial role in the success of software development, as multiple teams need to collaborate closely throughout the process. I also noticed the importance of building scalable and secure system architectures, especially when dealing with enterprise level applications. Additionally, there is a strong emphasis on maintaining high code quality through proper testing and continuous integration practices. Most importantly, I learned that user requirements and business needs are at the core of every software solution, guiding the design and development decisions to ensure the final product delivers real value.
+</p>
+        <span class="skill-chip">SDLC</span>
+        <span class="skill-chip">Agile Awareness</span>
+        <span class="skill-chip">System Design</span>
+        <span class="skill-chip">Collaboration</span>
+        <span class="skill-chip">Critical Thinking</span>
+      </div>
+      <div class="gallery gallery-3">
+        <div class="g-cell"><img src="images/visit_1.jpeg" alt="LSEG Visit — Presentation hall"></div>
+        <div class="g-cell"><img src="images/visit_2.jpeg" alt="LSEG Visit — Group photo"></div>
+        <div class="g-cell"><img src="images/visit_3.jpeg" alt="LSEG Visit — Tour"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-group-label">Continuous Learning</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">Ongoing</div>
+      <div class="timeline-role">Self Directed Learning and Professional Certifications</div>
+      <div class="timeline-org">Great Learning · Microsoft · Coursera</div>
+      <p>I try to keep learning outside of coursework too by picking up certifications in Python, data analysis and visualization, and cloud computing as a way to stay current and fill in the gaps.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REFLECTIONS -->
+<section id="reflections">
+  <div class="section-label">What I've learned</div>
+  <h2>Reflections</h2>
+  <div class="divider"></div>
+
+  <div class="reflection-card">
+    <div class="reflection-meta">Academic Project</div>
+    <h3>Social Media Application — Group Project</h3>
+    <p>This project was both exciting and challenging at the same time. It was interesting to apply what we learned in lectures to build something that actually functions like a real social media application. However, working as a team came with its own set of challenges.</p>
+    <div class="reflection-sub">The hard part</div>
+    <p>One of the biggest challenges was merging everyone's code. We faced conflicts and timing issues, and at times it felt like we were losing progress. In the end, we solved the problems with better communication and regular check ins.</p>
+    <div class="reflection-sub">What I'd do differently</div>
+    <p>Next time, I would try to be more active in team discussions from the beginning and manage my time more effectively to avoid last minute pressure. I also want to approach future group work with more confidence.</p>
+  </div>
+
+  <div class="reflection-card">
+    <div class="reflection-meta">Workshop Experience</div>
+    <h3>Workshop Series on Software Development</h3>
+    <p>I really enjoyed these workshops because they offered a more practical way of learning. Watching someone build something step by step made it easier to understand compared to just learning theory. It also encouraged me to explore tools and technologies on my own.</p>
+    <div class="reflection-sub">The hard part</div>
+    <p>Some sessions moved quite fast and introduced concepts I wasn't familiar with. I had to go back and review the materials afterward, which actually helped me develop a good habit of revising and learning independently.</p>
+    <div class="reflection-sub">What I'd do differently</div>
+    <p>I plan to continue attending similar workshops and try to apply what I learn immediately by working on small projects.</p>
+  </div>
+
+  <div class="reflection-card">
+    <div class="reflection-meta">Academic Skill</div>
+    <h3>Preparing for Presentations</h3>
+    <p>Presenting has always been a bit challenging for me, but I have noticed steady improvement over time. Preparing presentations,organising ideas, simplifying technical content, and thinking about possible questions has helped me understand topics more deeply.</p>
+    <div class="reflection-sub">The hard part</div>
+    <p>Generating ideas and speaking in front of an audience can still be difficult. I found that practising out loud, rather than just reading notes, made a big difference in building my confidence.</p>
+    <div class="reflection-sub">What I'd do differently</div>
+    <p>I want to focus on making my presentations more engaging by using visuals and interaction, and continue building my confidence through consistent practice.</p>
+  </div>
+
+  <div class="reflection-card">
+    <div class="reflection-meta">Industry Visit</div>
+    <h3>Field Visit to London Stock Exchange Group (LSEG)</h3>
+    <p>This was one of the most eye-opening experiences I've had so far. Seeing how a large organisation manages software development — from planning to teamwork and maintaining quality — made everything we learn in lectures feel much more meaningful.</p>
+    <div class="reflection-sub">What I'm taking forward</div>
+    <p>The visit gave me a clearer understanding of what working in a professional environment looks like. It also motivated me to keep improving my skills and reminded me that what I am studying has real world value.</p>
+  </div>
+</section>
+
+<!-- GOALS -->
+<section id="goals">
+  <div class="section-label">Where I'm headed</div>
+  <h2>Career goals and Future development</h2>
+  <p>In the short term, my main goal is to find an internship in the IT field. I see this as an important step to gain practical experience and understand how the industry works beyond what I learn in university. I want to apply my knowledge in a real world environment, learn from professionals, and improve my technical and interpersonal skills.
+In the long term, I aim to build a stable and successful career in the IT industry. I hope to grow into a confident professional who can contribute to meaningful projects and adapt to new technologies over time. Stability for me means not only having a secure position but also continuously improving and staying relevant in the field.
+To achieve these goals, there are several skills I need to develop further. I want to become more hardworking and disciplined in managing my tasks and responsibilities. Improving my communication skills is also important, specially for working in teams and expressing ideas clearly. In addition, I aim to strengthen my critical thinking abilities. So I can analyze problems effectively and come up with practical solutions.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Reach out</div>
+  <h2>Contact</h2>
+  <div class="divider"></div>
+  <p>Whether it's about a project, an opportunity, or just a conversation about tech.I'd love to hear from you. Feel free to reach out through any of the channels below.</p>
+  <div class="contact-grid">
+    <div class="contact-item">
+      <div class="contact-icon">&#9993;</div>
+      <div><div class="contact-label">Email</div><div class="contact-value">rashiprebhaoshani@email.com</div></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">&#128188;</div>
+      <div><div class="contact-label">LinkedIn</div><div class="contact-value">lk.linkedin.com/in/oshani-wickramathilake</div></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">&#128187;</div>
+      <div><div class="contact-label">GitHub</div><div class="contact-value">github.com/oshaniwickramathilaka</div></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">&#128205;</div>
+      <div><div class="contact-label">Location</div><div class="contact-value">Sri Lanka</div></div>
+    </div>
+  </div>
+  <p style="margin-top:2.5rem; font-size:11.5px; color:var(--text-muted); text-align:center;">&#169; 2026 Oshani Wickramathilaka &middot; Faculty of Computing and Technology, University of Kelaniya</p>
+</section>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  const links = document.querySelectorAll('.nav-links a');
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const match = document.querySelector('.nav-links a[href="#' + entry.target.id + '"]');
+        if (match) match.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+  links.forEach(link => link.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+  document.querySelectorAll('.g-cell img, .cert-img, .profile-img').forEach(img => {
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  function closeLightbox() { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
